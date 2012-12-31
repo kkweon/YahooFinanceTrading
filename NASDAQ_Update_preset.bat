@@ -1,1 +1,1 @@
-python DataPull.py -i NASDAQ_100.csv
+python DataPull.py -i NASDAQ_100.csv -y 2009 -p 2

@@ -168,13 +168,14 @@ if DEBUG:
 pretty_print(TOTAL_RETURN, STD, SHARPE_R)
 
 # PLOTTING BEGINS
-fig = figure()
+fig = figure(figsize = (10, 7))
 ax = fig.add_subplot(111) 
 NORMALIZED_DATA.plot(style = '-', ax = ax, rot = 30, grid = True)
+pd.rolling_mean(NORMALIZED_DATA.ix[:, 'Value'], 50).plot(ax = ax, c = "blue", style = '-.', label = "Rolling Mean, 50")
 ax.axhline(y = NORMALIZED_DATA.ix[0, 'Value'], color = 'r', ls = '--')
 fill_between(NORMALIZED_DATA.index, NORMALIZED_DATA.ix[0, 'Value'], NORMALIZED_DATA['Value'].values, where = NORMALIZED_DATA['Value'].values < NORMALIZED_DATA.ix[0, 'Value'], color = "red", alpha = 0.3)
 fill_between(NORMALIZED_DATA.index, NORMALIZED_DATA[PRICE_TYPE].values, NORMALIZED_DATA['Value'].values, where = NORMALIZED_DATA['Value'].values > NORMALIZED_DATA[PRICE_TYPE].values, color = "yellow", alpha = 0.3)
-legend(['MY PORTFOLIO', BENCHMARK], loc = 0)
+legend(['MY PORTFOLIO', BENCHMARK, 'Rolling Mean, 50'], loc = 0)
 ylabel('USD, $', fontsize = FONT_SIZE)
 xlabel('Daily', fontsize = FONT_SIZE)
 title('Normalized Prices', fontsize = FONT_SIZE)
@@ -187,10 +188,17 @@ print "FILE SAVED {:=<20}> [{:}]".format('', OUTPUT)
 
 clf()
 ax = fig.add_subplot(111)
-scatter(NORMALIZED_DATA[PRICE_TYPE], NORMALIZED_DATA['Value'], s = 40, c = "blue", marker = "*", linewidth = 0)
-xlabel(BENCHMARK + " PRICE", fontsize = FONT_SIZE)
+X = NORMALIZED_DATA[PRICE_TYPE]
+Y = NORMALIZED_DATA['Value']
+scatter(X, Y, s = 75, c= "#FE642E", linewidth = 0, alpha = 0.3)
+OLS_REG = pd.ols(y = Y, x = X)
+print OLS_REG
+OLS_FN = poly1d(OLS_REG.beta)
+plot(X, OLS_FN(X), c = "#2E2EFE", label = "OLS Regression")
+xlabel(BENCHMARK + " PRICE ($)", fontsize = FONT_SIZE)
 grid()
-ylabel("My Portfolio", fontsize = FONT_SIZE)
+ylabel("My Portfolio ($)", fontsize = FONT_SIZE)
 title("Scatter Plot: My portfolio vs " + BENCHMARK, fontsize = FONT_SIZE)
+legend(loc = 0)
 rstyle(ax)
 savefig(OUTPUT_FOLDER + OUTPUT2, dpi = DPI)
