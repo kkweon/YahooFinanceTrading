@@ -1,1 +1,1 @@
-python DataPull.py -y 2012 -i SP500.txt -p 2
+python DataPull.py -i SP500.txt -p 2

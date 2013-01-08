@@ -7,23 +7,17 @@
 #include <cstdlib>
 using namespace std;
 
-string delSpaces(string &str) 
-{
+string delSpaces(string &str) {
    str.erase(std::remove(str.begin(), str.end(), ' '), str.end());
    return str;
 }
 
-void print_vector(vector<float> vec) {
+template <class T>
+void print_vector(T vec) {
 	size_t sz = vec.size();
-	for(int i = 0; i < sz; i++)
+	for (int i = 0; i < sz; i++)
 		cout << vec[i] << endl;
 }
-void print_vector(vector<string> vec) {
-	size_t sz = vec.size();
-	for(int i = 0; i < sz; i++)
-		cout << vec[i] << endl;
-}
-
 
 int find_a_letter(string str, char letter, int pos = 1) {
 	int found = 0;
@@ -31,7 +25,6 @@ int find_a_letter(string str, char letter, int pos = 1) {
 		found = str.find(letter, found + 1);
 		pos--;
 	}
-
 	return found;
 }
 
@@ -90,7 +83,7 @@ void Equity::open_and_save() {
 		csv_file.close();
 	}
 	else {
-		cout << "Couldn't find a file " << file_path << endl;	
+		cout << "Failed to open a file: " << file_path << endl;	
 	}
 }
 
